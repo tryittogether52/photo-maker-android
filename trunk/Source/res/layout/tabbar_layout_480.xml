@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <!-- TOTAL OF ALL SUMMARY -->
+
+    <LinearLayout
+        android:id="@+id/main_tab"
+        android:layout_width="fill_parent"
+        android:layout_height="75.0dp"
+         android:background="@drawable/tab_background"
+        android:visibility="gone"
+        android:gravity="center_vertical"
+        android:stretchColumns="*" >
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".53" >
+
+            <ImageButton
+                android:id="@+id/attacktabbar_btn_1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="1.5dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/content_image"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_info"
+                android:layout_width="33.0dp"
+                android:layout_height="33.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7.5dp"
+                android:background="@drawable/home"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_info"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_home"
+                android:textColor="@android:color/white"
+                android:textSize="18.0dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".53" >
+
+            <ImageButton
+                android:id="@+id/attacktabbar_btn_2"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="1.5dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/content_image"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_info2"
+                android:layout_width="33.0dp"
+                android:layout_height="33.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7.5dp"
+                android:background="@drawable/settings2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_info2"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_setting"
+                android:textColor="@android:color/white"
+                android:textSize="18.0dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".53" >
+
+            <ImageButton
+                android:id="@+id/attacktabbar_btn_3"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="1.5dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/content_image"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_info3"
+                android:layout_width="33.0dp"
+                android:layout_height="33.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7.5dp"
+                android:background="@drawable/star" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_info3"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_favorites"
+                android:textColor="@android:color/white"
+                android:textSize="18.0dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        
+         <RelativeLayout
+            android:layout_width="0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight=".53" >
+
+            <ImageButton
+                android:id="@+id/attacktabbar_btn_4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_margin="1.5dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/content_image"
+                android:textColor="@android:color/white"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/img_info4"
+                android:layout_width="33.0dp"
+                android:layout_height="33.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="7.5dp"
+                android:background="@drawable/bookmark"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/img_info4"
+                android:layout_centerHorizontal="true"
+                android:text="@string/tab_infor"
+                android:textColor="@android:color/white"
+                android:textSize="18.0dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+    </LinearLayout>
+
+</LinearLayout>

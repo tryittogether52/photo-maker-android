@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resources>
+
+  
+    <drawable name="red">#7f00</drawable>
+    <drawable name="blue">#770000ff</drawable>
+    <drawable name="green">#7700ff00</drawable>
+    <drawable name="yellow">#77ffff00</drawable>
+    <drawable name="screen_background_black">#ff000000</drawable>
+    <drawable name="translucent_background">#e0000000</drawable>
+    <drawable name="transparent_background">#00000000</drawable>
+    
+    <color name="share_cancel_start">#656b73</color>
+    <color name="share_cancel_end">#343b45</color>
+    <color name="share_bg">#60656b</color>
+    <color name="share_start">#e4e7e6</color>
+    <color name="share_end">#c0c1c3</color>
+    <color name="select_text">#5c6579</color>
+    <color name="gray_start">#656565</color>
+    <color name="brown_mid">#5c3e23</color>
+    <color name="gray_text">#727272</color>
+    <color name="brown_text">#6e533b</color>
+    <color name="pink_text">#db4899</color>
+    <color name="separate_black_theme">#565656</color>
+    <color name="separate_white_theme">#737373</color>
+    <color name="solid_red">#f00</color>
+    <color name="solid_blue">#0000ff</color>
+    <color name="solid_green">#f0f0</color>
+    <color name="solid_yellow">#ffffff00</color>
+    <color name="gray_background">#ff888888</color>
+    <color name="white_background">#ffffffff</color>
+    <color name="steel_blue_background">#5CB3FF</color>
+    <color name="light_cyan">#E0FFFF</color>
+    <color name="spring_green">#4AA02C</color>
+    <color name="light_goldenrod1">#FFE87C</color>
+    <color name="greenStart">#ff33dd44</color>
+    <color name="greenMid">#ff0A8815</color>
+    <color name="greenEnd">#ff1da130</color>
+    <color name="progress_salmon1">#F88158</color>
+    <color name="progress_salmon2">#E67451</color>
+    <color name="cyan4">#004661</color>
+    <color name="coral3">#ab1926</color>
+    <color name="vinicorp">#f3a126</color>
+    <color name="vinicorp_green">#13445d</color>
+    <color name="vinicorp_blue_header">#9ebe3e</color>
+    <color name="turquoise2">#028ccb</color>
+    <color name="black_text_default">#ff000000</color>
+    <color name="gray_table_row">#e5e5e5</color>
+    <color name="edge_table_row">#ececec</color>
+    <color name="order_NO">#015474</color>
+    <color name="font_flag_current">#004661</color>
+    <color name="lines">#b7b9bd</color>
+    <color name="style1">#4c566c</color>
+    <color name="bg_frame">#f7f7f7</color>
+
+    <color name="slide_menu">#252525</color>
+</resources>
