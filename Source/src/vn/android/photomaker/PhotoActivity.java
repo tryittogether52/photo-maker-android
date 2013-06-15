@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -30,7 +29,6 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 	private boolean menuOut = false;
 	private AnimParams animParams = new AnimParams();
 	protected ScreenUtil mScreenUtil;
-	private Uri mImageCaptureUri = null;
 
 	/** View of layout */
 	private View menu;
@@ -212,9 +210,6 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 					// Start camera.
 					Intent cameraIntent = new Intent(
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-					cameraIntent.putExtra(
-							android.provider.MediaStore.EXTRA_OUTPUT,
-							mImageCaptureUri);
 					startActivityForResult(cameraIntent,
 							ConstantVariable.TAKE_PICTURE);
 					break;
@@ -244,13 +239,6 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 							Environment.getExternalStorageDirectory()
 									+ ConstantVariable.FOLDER, bitmap);
 					mContent.addImage(getApplicationContext(), path);
-				}
-
-				if (mImageCaptureUri != null) {
-					Log.e("PATH", ImageUtils.getRealPathFromURI(this,
-							mImageCaptureUri));
-					mContent.addImage(getApplicationContext(), ImageUtils
-							.getRealPathFromURI(this, mImageCaptureUri));
 				}
 				break;
 			default:
