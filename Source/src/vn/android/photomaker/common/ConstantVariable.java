@@ -1,9 +1,12 @@
 package vn.android.photomaker.common;
 
+import java.io.File;
+
 public class ConstantVariable {
 
 	public static final String FILE_SHARE = "photomaker_share";
 	public static final String CONTENT_URL = "content://vn.adnroid.photomaker.database";
+	public static final String FOLDER = File.separator + "PhotoMaker";
 	
 	// Constant of tab.
 	public static final int TAB_MAIN = 1;

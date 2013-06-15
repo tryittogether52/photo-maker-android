@@ -6,11 +6,21 @@ package vn.android.photomaker.utils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 /**
  * This class contain all functions for process with image.
@@ -209,5 +219,61 @@ public class ImageUtils {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * And to convert the image URI to the direct file system path of the image
+	 * file
+	 * 
+	 * @param contentURI
+	 * @return
+	 */
+	public static String getRealPathFromURI(Context context, Uri contentURI) {
+		Cursor cursor = context.getContentResolver().query(contentURI, null,
+				null, null, null);
+		if (cursor == null) {
+			return contentURI.getPath();
+		} else {
+			cursor.moveToFirst();
+			int idx = cursor
+					.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+			return cursor.getString(idx);
+		}
+	}
+
+	public static String saveBitmapToFile(String fullPath, Bitmap bitmap) {
+		String filePath = "";
+		try {
+			File dir = new File(fullPath);
+			if (!dir.exists()) {
+				dir.mkdirs();
+			}
+			OutputStream fOut = null;
+			File file = new File(fullPath, createFileName());
+			file.createNewFile();
+			fOut = new FileOutputStream(file);
+
+			// 100 means no compression, the lower you go, the stronger the
+			// compression
+			bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+			fOut.flush();
+			fOut.close();
+			filePath = file.getAbsolutePath();
+		} catch (Exception ex) {
+			filePath = "";
+		}
+		return filePath;
+	}
+
+	/**
+	 * This method used for create file name from system date time.
+	 * 
+	 * @return {@link String} The name created.
+	 * */
+	@SuppressLint("SimpleDateFormat")
+	public static String createFileName() {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HHmmss");
+		String s = df.format(new Date(System.currentTimeMillis())) + ".png";
+		return s;
 	}
 }

@@ -104,23 +104,12 @@ public class PhotoSortrView extends View implements
 	 * @param context
 	 * @param mbitmap
 	 */
-	public void addImage(Context context, Uri uriPath) {
+	public void addImage(Context context, String path) {
 
 		Resources res = context.getResources();
 
-		/*File f = new File(uriPath.getPath());
-		Bitmap bm = ImageUtils.decodeFile(f);*/
-		
-		 Bitmap bm;
-		try {
-			bm = MediaStore.Images.Media.getBitmap(context.getContentResolver(), uriPath);
-		} catch (Exception e) {
-			bm = null;
-		}
-   
-//		
-//		Bitmap bm = BitmapFactory.decodeFile(uriPath.get);
-				
+		File f = new File(path);
+		Bitmap bm = ImageUtils.decodeFile(f);
 		mImages.add(new Img(bm, res));
 		mImages.get(mImages.size() - 1).load(res);
 		invalidate();

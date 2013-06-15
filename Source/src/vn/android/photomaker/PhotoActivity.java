@@ -2,15 +2,16 @@ package vn.android.photomaker;
 
 import vn.android.photomaker.common.ConstantVariable;
 import vn.android.photomaker.multitouch.PhotoSortrView;
+import vn.android.photomaker.utils.ImageUtils;
 import vn.android.photomaker.utils.ScreenUtil;
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -29,6 +30,7 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 	private boolean menuOut = false;
 	private AnimParams animParams = new AnimParams();
 	protected ScreenUtil mScreenUtil;
+	private Uri mImageCaptureUri = null;
 
 	/** View of layout */
 	private View menu;
@@ -208,12 +210,14 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 
 				case 1:
 					// Start camera.
-					intent = new Intent(
+					Intent cameraIntent = new Intent(
 							android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-					startActivityForResult(intent,
+					cameraIntent.putExtra(
+							android.provider.MediaStore.EXTRA_OUTPUT,
+							mImageCaptureUri);
+					startActivityForResult(cameraIntent,
 							ConstantVariable.TAKE_PICTURE);
 					break;
-
 				default:
 					break;
 				}
@@ -229,23 +233,25 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 			switch (requestCode) {
 			case ConstantVariable.SELECT_PHOTOLIBRARY:
 				Uri selectedImageUri = data.getData();
-				mContent.addImage(getApplicationContext(), selectedImageUri);
+				mContent.addImage(getApplicationContext(),
+						ImageUtils.getRealPathFromURI(this, selectedImageUri));
 				break;
 			case ConstantVariable.TAKE_PICTURE:
-				ContentResolver cr = getContentResolver();
-				String[] p1 = new String[] {
-						MediaStore.Images.ImageColumns._ID,
-						MediaStore.Images.ImageColumns.DATE_TAKEN };
-				Cursor c1 = cr.query(
-						MediaStore.Images.Media.EXTERNAL_CONTENT_URI, p1, null,
-						null, p1[1] + " DESC");
-				if (c1.moveToFirst()) {
-					String uristringpic = "content://media/external/images/media/"
-							+ c1.getInt(0);
-					Uri newuri = Uri.parse(uristringpic);
-					mContent.addImage(getApplicationContext(), newuri);
+				Bundle extras = data.getExtras();
+				if (extras != null) {
+					Bitmap bitmap = extras.getParcelable("data");
+					String path = ImageUtils.saveBitmapToFile(
+							Environment.getExternalStorageDirectory()
+									+ ConstantVariable.FOLDER, bitmap);
+					mContent.addImage(getApplicationContext(), path);
 				}
-				c1.close();
+
+				if (mImageCaptureUri != null) {
+					Log.e("PATH", ImageUtils.getRealPathFromURI(this,
+							mImageCaptureUri));
+					mContent.addImage(getApplicationContext(), ImageUtils
+							.getRealPathFromURI(this, mImageCaptureUri));
+				}
 				break;
 			default:
 				break;
