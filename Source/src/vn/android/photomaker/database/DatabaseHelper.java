@@ -106,6 +106,35 @@ public class DatabaseHelper {
 			sqlBuilder.append(")");
 			db.execSQL(sqlBuilder.toString());
 
+			// Create picture table.
+			sqlBuilder = new StringBuilder();
+			sqlBuilder.append("CREATE TABLE ");
+			sqlBuilder.append(DB_TABLE_PICPART);
+			sqlBuilder.append("(");
+			sqlBuilder.append(PART_ID);
+			sqlBuilder.append(" INTEGER PRIMARY KEY,");
+			sqlBuilder.append(PIC_ID);
+			sqlBuilder.append(" INTEGER,");
+			sqlBuilder.append(PART_PATH);
+			sqlBuilder.append(" TEXT, ");
+			sqlBuilder.append(PART_ANGLE);
+			sqlBuilder.append(" FLOAT, ");
+			sqlBuilder.append(PART_SCALE);
+			sqlBuilder.append(" FLOAT, ");
+			sqlBuilder.append(PART_SCALEX);
+			sqlBuilder.append(" FLOAT, ");
+			sqlBuilder.append(PART_SCALEY);
+			sqlBuilder.append(" FLOAT,");
+			sqlBuilder.append(PART_XOFF);
+			sqlBuilder.append(" FLOAT,");
+			sqlBuilder.append(PART_YOFF);
+			sqlBuilder.append(" FLOAT,");
+			sqlBuilder.append(PART_ORDER);
+			sqlBuilder.append(" INTEGER,");
+			sqlBuilder.append("FOREIGN KEY(" + PIC_ID + ") REFERENCES "
+					+ DB_TABLE_PICTURES + "(" + PIC_ID + ") ON DELETE CASCADE");
+			sqlBuilder.append(")");
+			db.execSQL(sqlBuilder.toString());
 		}
 
 		@Override

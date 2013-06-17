@@ -2,6 +2,7 @@ package vn.android.photomaker.entities;
 
 public class PicturePart {
 
+	private int id;
 	private int pictureID;
 	private String pathImage;
 	private float xOff;
@@ -12,8 +13,11 @@ public class PicturePart {
 	private float angle;
 	private int order;
 
-	public PicturePart(String pathImage, float xOff, float yOff, float scale,
-			float scaleX, float scaleY, float angle, int order) {
+	public PicturePart(int id, int pictureID, String pathImage, float xOff,
+			float yOff, float scale, float scaleX, float scaleY, float angle,
+			int order) {
+		this.id = id;
+		this.pictureID = pictureID;
 		this.pathImage = pathImage;
 		this.xOff = xOff;
 		this.yOff = yOff;
@@ -22,6 +26,27 @@ public class PicturePart {
 		this.scaleY = scaleY;
 		this.angle = angle;
 		this.order = order;
+	}
+
+	public PicturePart(int pictureID, String pathImage, float xOff, float yOff,
+			float scale, float scaleX, float scaleY, float angle, int order) {
+		this.pictureID = pictureID;
+		this.pathImage = pathImage;
+		this.xOff = xOff;
+		this.yOff = yOff;
+		this.scale = scale;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+		this.angle = angle;
+		this.order = order;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getPictureID() {

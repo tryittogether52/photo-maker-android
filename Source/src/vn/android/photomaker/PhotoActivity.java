@@ -1,7 +1,17 @@
 package vn.android.photomaker;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
 import vn.android.photomaker.common.ConstantVariable;
+import vn.android.photomaker.database.PictureDB;
+import vn.android.photomaker.database.PicturePartDB;
+import vn.android.photomaker.entities.Picture;
+import vn.android.photomaker.entities.PicturePart;
+import vn.android.photomaker.multitouch.MultiTouchController.PositionAndScale;
 import vn.android.photomaker.multitouch.PhotoSortrView;
+import vn.android.photomaker.multitouch.PhotoSortrView.Img;
 import vn.android.photomaker.utils.ImageUtils;
 import vn.android.photomaker.utils.ScreenUtil;
 import android.app.AlertDialog;
@@ -28,7 +38,11 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 	/** Parameters */
 	private boolean menuOut = false;
 	private AnimParams animParams = new AnimParams();
-	protected ScreenUtil mScreenUtil;
+	private ScreenUtil mScreenUtil;
+	private List<String> imgPath;
+	private ArrayList<Img> imgs;
+	private PictureDB picDB;
+	private PicturePartDB partDB;
 
 	/** View of layout */
 	private View menu;
@@ -62,6 +76,9 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 	 */
 	private void setupViews() {
 
+		picDB = new PictureDB();
+		partDB = new PicturePartDB();
+		imgPath = new ArrayList<String>();
 		menu = findViewById(R.id.menu);
 		mContent = (PhotoSortrView) findViewById(R.id.app);
 		mnImportPicture = findViewById(R.id.import_photo);
@@ -84,7 +101,6 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 		if (menuOut) {
 			slideMenu();
 		} else {
-			// finishActivityWithAnimation(true);
 			super.onBackPressed();
 		}
 	}
@@ -127,6 +143,34 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 		switch (item.getItemId()) {
 		case R.id.import_item:
 			slideMenu();
+			break;
+		case R.id.save_photo:
+			Bitmap bm = ImageUtils.createBitmapFromView(this, mContent);
+			String path = ImageUtils.saveBitmapToFile(
+					Environment.getExternalStorageDirectory()
+							+ ConstantVariable.FOLDER, bm);
+			Calendar c = Calendar.getInstance();
+			Picture pic = new Picture(path, R.drawable.bg_photo_edit,
+					c.getTime(), c.getTime(), 0, 0);
+			int id = picDB.add(pic);
+			if (id != -1) {
+				imgs = mContent.getmImages();
+				PositionAndScale newObjPosAndScale = new PositionAndScale();
+				PicturePart part = null;
+				int index = 0;
+				for (Img imgItem : imgs) {
+					mContent.getPositionAndScale(imgItem, newObjPosAndScale);
+					part = new PicturePart(id, imgItem.getPath(),
+							newObjPosAndScale.getXOff(),
+							newObjPosAndScale.getYOff(),
+							newObjPosAndScale.getScale(),
+							newObjPosAndScale.getScaleX(),
+							newObjPosAndScale.getScaleY(),
+							newObjPosAndScale.getAngle(), index);
+					++index;
+					partDB.add(part);
+				}
+			}
 			break;
 		default:
 			break;
@@ -225,20 +269,27 @@ public class PhotoActivity extends SherlockActivity implements OnClickListener,
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (data != null) {
+			String path = "";
 			switch (requestCode) {
 			case ConstantVariable.SELECT_PHOTOLIBRARY:
 				Uri selectedImageUri = data.getData();
-				mContent.addImage(getApplicationContext(),
-						ImageUtils.getRealPathFromURI(this, selectedImageUri));
+				path = ImageUtils.getRealPathFromURI(this, selectedImageUri);
+				if (path != null && path.length() > 0) {
+					mContent.addImage(getApplicationContext(), path);
+					imgPath.add(path);
+				}
 				break;
 			case ConstantVariable.TAKE_PICTURE:
 				Bundle extras = data.getExtras();
 				if (extras != null) {
 					Bitmap bitmap = extras.getParcelable("data");
-					String path = ImageUtils.saveBitmapToFile(
+					path = ImageUtils.saveBitmapToFile(
 							Environment.getExternalStorageDirectory()
-									+ ConstantVariable.FOLDER, bitmap);
-					mContent.addImage(getApplicationContext(), path);
+									+ ConstantVariable.FOLDER_CAMERA, bitmap);
+					if (path != null && path.length() > 0) {
+						mContent.addImage(getApplicationContext(), path);
+						imgPath.add(path);
+					}
 				}
 				break;
 			default:

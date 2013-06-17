@@ -14,18 +14,53 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
+import android.view.View;
+import android.view.View.MeasureSpec;
 
 /**
  * This class contain all functions for process with image.
  * */
 public class ImageUtils {
+
+	/**
+	 * This function used for create bitmap image from view with hide layout.
+	 * */
+	public static Bitmap createBitmapFromView(Activity context, View view) {
+
+		Bitmap b = null;
+		try {
+			if (view != null) {
+
+				DisplayMetrics displayMetrics = new DisplayMetrics();
+				context.getWindowManager().getDefaultDisplay()
+						.getMetrics(displayMetrics);
+				view.measure(MeasureSpec.makeMeasureSpec(
+						displayMetrics.widthPixels, MeasureSpec.EXACTLY),
+						MeasureSpec.makeMeasureSpec(
+								displayMetrics.heightPixels,
+								MeasureSpec.EXACTLY));
+				view.layout(0, 0, displayMetrics.widthPixels,
+						displayMetrics.heightPixels);
+				b = Bitmap.createBitmap(view.getMeasuredWidth(),
+						view.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+				Canvas canvas = new Canvas(b);
+				view.draw(canvas);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return b;
+	}
 
 	/**
 	 * Crop image in center of origin image
@@ -244,10 +279,6 @@ public class ImageUtils {
 	public static String saveBitmapToFile(String fullPath, Bitmap bitmap) {
 		String filePath = "";
 		try {
-			File dir = new File(fullPath);
-			if (!dir.exists()) {
-				dir.mkdirs();
-			}
 			OutputStream fOut = null;
 			File file = new File(fullPath, createFileName());
 			file.createNewFile();

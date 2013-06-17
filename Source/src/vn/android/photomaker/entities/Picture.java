@@ -1,7 +1,6 @@
 package vn.android.photomaker.entities;
 
 import java.util.Date;
-import java.util.List;
 
 import vn.android.photomaker.utils.DateUtil;
 
@@ -10,39 +9,27 @@ public class Picture implements Comparable<Picture> {
 	private int id;
 	private String path;
 	private int background;
-	private List<PicturePart> listPart;
 	private Date createDate;
 	private Date modifiedDate;
 	private int index;
 	private int pageIndex;
 
-	public Picture(String path, int background, List<PicturePart> listPart,
-			String createDate, String modifiedDate, int index, int pageIndex) {
-		super();
+	public Picture(String path, int background, Date createDate,
+			Date modifiedDate, int index, int pageIndex) {
 		this.path = path;
 		this.background = background;
-		this.listPart = listPart;
-		Date date;
-		if (createDate != null && createDate.length() > 0) {
-			date = DateUtil.stringToDate(createDate, DateUtil.DATE_FORMAT);
-			this.createDate = date;
-		}
-		if (modifiedDate != null && modifiedDate.length() > 0) {
-			date = DateUtil.stringToDate(modifiedDate, DateUtil.DATE_FORMAT);
-			this.modifiedDate = date;
-		}
+		this.createDate = createDate;
+		this.modifiedDate = modifiedDate;
 		this.index = index;
 		this.pageIndex = pageIndex;
 	}
 
-	public Picture(int id, String path, int background,
-			List<PicturePart> listPart, String createDate, String modifiedDate,
-			int index, int pageIndex) {
+	public Picture(int id, String path, int background, String createDate,
+			String modifiedDate, int index, int pageIndex) {
 		super();
 		this.id = id;
 		this.path = path;
 		this.background = background;
-		this.listPart = listPart;
 		Date date;
 		if (createDate != null && createDate.length() > 0) {
 			date = DateUtil.stringToDate(createDate, DateUtil.DATE_FORMAT);
@@ -78,14 +65,6 @@ public class Picture implements Comparable<Picture> {
 
 	public void setBackground(int background) {
 		this.background = background;
-	}
-
-	public List<PicturePart> getListPart() {
-		return listPart;
-	}
-
-	public void setListPart(List<PicturePart> listPart) {
-		this.listPart = listPart;
 	}
 
 	public Date getCreateDate() {

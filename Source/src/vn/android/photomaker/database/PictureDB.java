@@ -5,9 +5,11 @@ import java.util.List;
 
 import vn.android.photomaker.common.ConstantVariable;
 import vn.android.photomaker.entities.Picture;
+import vn.android.photomaker.utils.DateUtil;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 public class PictureDB {
 
@@ -34,8 +36,32 @@ public class PictureDB {
 	 */
 	public synchronized int add(Picture item) {
 
+		// Get index.
+		int index = 0;
+		int page = 0;
+		List<Picture> list = select();
+		if (list != null && list.size() > 0) {
+			index = list.size();
+			Picture temp = list.get(index - 1);
+			page = temp.getPageIndex();
+			List<Picture> pageItem = selectAll(page);
+			if (pageItem != null
+					&& pageItem.size() >= ConstantVariable.PAGE_SIZE) {
+				++page;
+			}
+		}
+
 		int rs = -1;
 		ContentValues cv = new ContentValues();
+		cv.put(DatabaseHelper.PIC_PATH, item.getPath());
+		cv.put(DatabaseHelper.PIC_BG, item.getBackground());
+		cv.put(DatabaseHelper.PIC_CREATEDATE,
+				DateUtil.formatDate(item.getCreateDate(), DateUtil.DATE_FORMAT));
+		cv.put(DatabaseHelper.PIC_INDEX, index);
+		cv.put(DatabaseHelper.PIC_MODIFIEDDATE, DateUtil.formatDate(
+				item.getModifiedDate(), DateUtil.DATE_FORMAT));
+		cv.put(DatabaseHelper.PIC_PAGEINDEX, page);
+
 		// put data.
 		Uri result = provider.insert(uri, cv);
 		String id = result.getLastPathSegment();
@@ -88,11 +114,11 @@ public class PictureDB {
 				DatabaseHelper.PIC_BG, DatabaseHelper.PIC_CREATEDATE,
 				DatabaseHelper.PIC_MODIFIEDDATE, DatabaseHelper.PIC_INDEX,
 				DatabaseHelper.PIC_PAGEINDEX }, null, null,
-				DatabaseHelper.PIC_ID + " DESC");
+				DatabaseHelper.PIC_INDEX + " DESC");
 		if (cursor.moveToFirst()) {
 			do {
 				list.add(new Picture(cursor.getInt(0), cursor.getString(1),
-						cursor.getInt(2), null, cursor.getString(3), cursor
+						cursor.getInt(2), cursor.getString(3), cursor
 								.getString(4), cursor.getInt(5), cursor
 								.getInt(6)));
 			} while (cursor.moveToNext());
@@ -117,11 +143,11 @@ public class PictureDB {
 				DatabaseHelper.PIC_BG, DatabaseHelper.PIC_CREATEDATE,
 				DatabaseHelper.PIC_MODIFIEDDATE, DatabaseHelper.PIC_INDEX,
 				DatabaseHelper.PIC_PAGEINDEX }, DatabaseHelper.PIC_ID + "=?",
-				new String[] { "" + id }, DatabaseHelper.PIC_ID + " DESC");
+				new String[] { "" + id }, null);
 		if (cursor.moveToFirst()) {
 			mHistoryItem = new Picture(cursor.getInt(0), cursor.getString(1),
-					cursor.getInt(2), null, cursor.getString(3),
-					cursor.getString(4), cursor.getInt(5), cursor.getInt(6));
+					cursor.getInt(2), cursor.getString(3), cursor.getString(4),
+					cursor.getInt(5), cursor.getInt(6));
 		}
 		if (cursor != null && !cursor.isClosed()) {
 			cursor.close();
@@ -143,12 +169,12 @@ public class PictureDB {
 				DatabaseHelper.PIC_BG, DatabaseHelper.PIC_CREATEDATE,
 				DatabaseHelper.PIC_MODIFIEDDATE, DatabaseHelper.PIC_INDEX,
 				DatabaseHelper.PIC_PAGEINDEX }, DatabaseHelper.PIC_PAGEINDEX
-				+ "=?", new String[] { "" + pageIndex }, DatabaseHelper.PIC_ID
-				+ " DESC");
+				+ "=?", new String[] { "" + pageIndex },
+				DatabaseHelper.PIC_INDEX + " DESC");
 		if (cursor.moveToFirst()) {
 			do {
 				list.add(new Picture(cursor.getInt(0), cursor.getString(1),
-						cursor.getInt(2), null, cursor.getString(3), cursor
+						cursor.getInt(2), cursor.getString(3), cursor
 								.getString(4), cursor.getInt(5), cursor
 								.getInt(6)));
 			} while (cursor.moveToNext());
@@ -157,6 +183,23 @@ public class PictureDB {
 			cursor.close();
 		}
 		return list;
+	}
+
+	/**
+	 * This method used for update position of Picture.
+	 * 
+	 * @param {album} The object to update in databases.
+	 * */
+	public synchronized void updateIndex(Picture pic) {
+
+		ContentValues cv = new ContentValues();
+		cv.put(DatabaseHelper.PIC_INDEX, pic.getIndex());
+		cv.put(DatabaseHelper.PIC_PAGEINDEX, pic.getPageIndex());
+
+		// update data.
+		provider.update(uri, cv, DatabaseHelper.PIC_ID + "=?",
+				new String[] { "" + pic.getId() });
+		Log.i("Update index", "true");
 	}
 
 	/**

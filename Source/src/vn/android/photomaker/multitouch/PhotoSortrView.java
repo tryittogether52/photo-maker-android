@@ -1,11 +1,10 @@
 package vn.android.photomaker.multitouch;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.android.photomaker.R;
 import vn.android.photomaker.entities.PicturePart;
 import vn.android.photomaker.multitouch.MultiTouchController.MultiTouchObjectCanvas;
 import vn.android.photomaker.multitouch.MultiTouchController.PointInfo;
@@ -15,15 +14,12 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -71,7 +67,7 @@ public class PhotoSortrView extends View implements
 		mLinePaintTouchPointCircle.setStrokeWidth(5);
 		mLinePaintTouchPointCircle.setStyle(Style.STROKE);
 		mLinePaintTouchPointCircle.setAntiAlias(true);
-		setBackgroundColor(Color.BLACK);
+		setBackgroundResource(R.drawable.bg_photo_edit);
 	}
 
 	/**
@@ -89,7 +85,7 @@ public class PhotoSortrView extends View implements
 		for (PicturePart picture : listPart) {
 			f = new File(picture.getPathImage());
 			bm = ImageUtils.decodeFile(f);
-			mImages.add(new Img(bm, res));
+			mImages.add(new Img(picture.getPathImage(), bm, res));
 			objPosAndScale.set(picture.getxOff(), picture.getyOff(),
 					picture.getScale(), picture.getScaleX(),
 					picture.getScaleY(), picture.getAngle());
@@ -110,7 +106,7 @@ public class PhotoSortrView extends View implements
 
 		File f = new File(path);
 		Bitmap bm = ImageUtils.decodeFile(f);
-		mImages.add(new Img(bm, res));
+		mImages.add(new Img(path, bm, res));
 		mImages.get(mImages.size() - 1).load(res);
 		invalidate();
 	}
@@ -178,7 +174,9 @@ public class PhotoSortrView extends View implements
 
 	// ----------------------------------------------------------------------------------------------
 
-	class Img {
+	public class Img {
+
+		private String path;
 
 		private Bitmap mBitmap;
 
@@ -194,7 +192,8 @@ public class PhotoSortrView extends View implements
 
 		private static final float SCREEN_MARGIN = 100;
 
-		public Img(Bitmap mBitmap, Resources res) {
+		public Img(String path, Bitmap mBitmap, Resources res) {
+			this.path = path;
 			this.mBitmap = mBitmap;
 			this.firstLoad = true;
 			getMetrics(res);
@@ -312,8 +311,12 @@ public class PhotoSortrView extends View implements
 			canvas.restore();
 		}
 
-		public Drawable getDrawable() {
-			return drawable;
+		public String getPath() {
+			return path;
+		}
+
+		public void setPath(String path) {
+			this.path = path;
 		}
 
 		public int getWidth() {
@@ -344,7 +347,6 @@ public class PhotoSortrView extends View implements
 			return angle;
 		}
 
-		// FIXME: these need to be updated for rotation
 		public float getMinX() {
 			return minX;
 		}

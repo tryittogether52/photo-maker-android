@@ -10,10 +10,12 @@ import vn.android.photomaker.database.PictureDB;
 import vn.android.photomaker.entities.Picture;
 import vn.android.photomaker.gridpage.Page;
 import vn.android.photomaker.gridpage.PagedDragDropGridAdapter;
+import vn.android.photomaker.utils.ImageLoader;
 import vn.android.photomaker.utils.ScreenUtil;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * 
@@ -36,10 +38,13 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 
 	private PictureDB db;
 
+	private ImageLoader loader;
+
 	public PageAdapter(Activity context, ScreenUtil sUtil) {
 		this.db = new PictureDB();
 		this.context = context;
 		this.sUtil = sUtil;
+		this.loader = new ImageLoader(context);
 		reload();
 	}
 
@@ -89,7 +94,11 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 		LayoutInflater inflate = LayoutInflater.from(context);
 		View view = inflate.inflate(sUtil.getResourceID(R.array.grid_item),
 				null);
-
+		ImageView ivThumbnail = (ImageView) view
+				.findViewById(R.id.imgthumbnail);
+		// Get information of picture in page.
+		Picture pic = getItem(page, index);
+		loader.DisplayImage(pic.getPath(), ivThumbnail);
 		return view;
 	}
 
@@ -135,9 +144,10 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 			b.setIndex(tg);
 		}
 		getPage(pageIndex).swapItems(itemIndexA, itemIndexB);
-		/*
-		 * albumDB.updateIndex(a); albumDB.updateIndex(b);
-		 */
+
+		db.updateIndex(a);
+		db.updateIndex(b);
+
 	}
 
 	@Override
@@ -164,7 +174,7 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 			startpage.removeItem(itemIndex);
 			item.setIndex(newPos);
 			landingPage.addItem(item);
-			// albumDB.updateIndex(item);
+			db.updateIndex(item);
 		}
 	}
 
@@ -192,7 +202,7 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 			startpage.removeItem(itemIndex);
 			item.setIndex(newPos);
 			landingPage.addItem(item);
-			// albumDB.updateIndex(item);
+			db.updateIndex(item);
 		}
 	}
 
@@ -216,5 +226,9 @@ public class PageAdapter implements PagedDragDropGridAdapter {
 			}
 		}
 		return -1;
+	}
+
+	private class ViewHolder {
+		ImageView ivThumbnail;
 	}
 }
