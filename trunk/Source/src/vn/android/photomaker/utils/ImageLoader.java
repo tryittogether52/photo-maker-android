@@ -1,5 +1,6 @@
 package vn.android.photomaker.utils;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -15,7 +16,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.View;
 import android.widget.ImageView;
-
 
 /**
  * This class is used for implement with bitmap.
@@ -143,12 +143,8 @@ public class ImageLoader {
 		try {
 
 			// Download bitmap.
-			Bitmap bitmapDownload = null;
-			try {
-				bitmapDownload = DownloadImage.download(url);
-			} catch (Exception e) {
-				bitmapDownload = null;
-			}
+			File f = new File(url);
+			Bitmap bitmapDownload = ImageUtils.decodeFile(f);
 			if (bitmapDownload != null) {
 				CacheUtil.addBitmapToCache(url, bitmapDownload);
 			}

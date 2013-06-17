@@ -1,6 +1,9 @@
 package vn.android.photomaker.common;
 
+import java.io.File;
+
 import android.app.Application;
+import android.os.Environment;
 
 public class ApplicationVariable extends Application {
 
@@ -9,6 +12,16 @@ public class ApplicationVariable extends Application {
 	@Override
 	public void onCreate() {
 
+		File f = new File(Environment.getExternalStorageDirectory()
+				+ ConstantVariable.FOLDER);
+		if (!f.exists()) {
+			f.mkdir();
+		}
+		f = new File(Environment.getExternalStorageDirectory()
+				+ ConstantVariable.FOLDER_CAMERA);
+		if (!f.exists()) {
+			f.mkdir();
+		}
 	}
 
 	public int getPictureID() {
